@@ -1,0 +1,284 @@
+{
+    "site": "cara",
+    "palette": [
+        "#DCEDFC",
+        "#0A968C",
+        "#E8735A",
+        "#F5F0EB",
+        "#041E42",
+        "#222222"
+    ],
+    "stitch_project_id": "7110657721294532215",
+    "stitch_screens": {
+        "hero": "7eba316671754c6c91471ad2a2416657",
+        "product_grid": "cee25b60860a45a7b92dcaf7ceeea049",
+        "features_promo": "4596857e425a40c4ac65efe7b4902412",
+        "newsletter_footer": "ca419a85439342e7b8c3757ecdbc69e8",
+        "product_detail": "5ca4a7e78d4d46d28d646d12dd23db10"
+    },
+    "assets": [
+        {
+            "name": "hero-model",
+            "kebab": "hero-model",
+            "purpose": "Split-hero right column model cutout for editorial hero section",
+            "variants": [
+                {
+                    "id": "desktop",
+                    "file": "/stitch_outputs/hero-model/hero-model-desktop.png",
+                    "w": 1024,
+                    "h": 1024
+                }
+            ],
+            "layers": [
+                "model-cutout"
+            ],
+            "alt_text": "Woman wearing pastel pink jacket in editorial fashion pose, looking to the right",
+            "meta": "/stitch_outputs/hero-model/meta.json"
+        },
+        {
+            "name": "hero-reveal-frame",
+            "kebab": "hero-reveal-frame",
+            "purpose": "8-frame sequence for hero mask-reveal GSAP animation (horizontal wipe left-to-right)",
+            "variants": [
+                {
+                    "id": "frame-001",
+                    "file": "/stitch_outputs/hero-reveal-frames/hero-reveal-frame-001.png",
+                    "w": 1600,
+                    "h": 1000
+                },
+                {
+                    "id": "frame-002",
+                    "file": "/stitch_outputs/hero-reveal-frames/hero-reveal-frame-002.png",
+                    "w": 1600,
+                    "h": 1000
+                },
+                {
+                    "id": "frame-003",
+                    "file": "/stitch_outputs/hero-reveal-frames/hero-reveal-frame-003.png",
+                    "w": 1600,
+                    "h": 1000
+                },
+                {
+                    "id": "frame-004",
+                    "file": "/stitch_outputs/hero-reveal-frames/hero-reveal-frame-004.png",
+                    "w": 1600,
+                    "h": 1000
+                },
+                {
+                    "id": "frame-005",
+                    "file": "/stitch_outputs/hero-reveal-frames/hero-reveal-frame-005.png",
+                    "w": 1600,
+                    "h": 1000
+                },
+                {
+                    "id": "frame-006",
+                    "file": "/stitch_outputs/hero-reveal-frames/hero-reveal-frame-006.png",
+                    "w": 1600,
+                    "h": 1000
+                },
+                {
+                    "id": "frame-007",
+                    "file": "/stitch_outputs/hero-reveal-frames/hero-reveal-frame-007.png",
+                    "w": 1600,
+                    "h": 1000
+                },
+                {
+                    "id": "frame-008",
+                    "file": "/stitch_outputs/hero-reveal-frames/hero-reveal-frame-008.png",
+                    "w": 1600,
+                    "h": 1000
+                }
+            ],
+            "layers": [
+                "mask-frame"
+            ],
+            "alt_text": "Hero reveal animation frame - horizontal mask wipe sequence",
+            "meta": "/stitch_outputs/hero-reveal-frames/meta.json",
+            "notes": "Frames simulate clip-path expansion via GSAP; use CSS clip-path inset() for production instead of canvas frames for simpler implementation"
+        },
+        {
+            "name": "product-f1",
+            "kebab": "product-f1",
+            "purpose": "Featured product: Cartoon Astronauts T-Shirt",
+            "variants": [
+                {
+                    "id": "default",
+                    "file": "/img/products/f1.jpg",
+                    "w": 600,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Cartoon Astronauts T-Shirt - gray t-shirt with astronaut illustration",
+            "meta": null
+        },
+        {
+            "name": "product-f2",
+            "kebab": "product-f2",
+            "purpose": "Featured product: Flower T-Shirt",
+            "variants": [
+                {
+                    "id": "default",
+                    "file": "/img/products/f2.jpg",
+                    "w": 600,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Flower T-Shirt - white t-shirt with floral print design"
+        },
+        {
+            "name": "product-f3",
+            "kebab": "product-f3",
+            "purpose": "Featured product: Red Rose T-Shirt",
+            "variants": [
+                {
+                    "id": "default",
+                    "file": "/img/products/f3.jpg",
+                    "w": 600,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Red Rose T-Shirt - dark t-shirt with red rose graphic"
+        },
+        {
+            "name": "product-f4",
+            "kebab": "product-f4",
+            "purpose": "Featured product: Red Lily T-Shirt",
+            "variants": [
+                {
+                    "id": "default",
+                    "file": "/img/products/f4.jpg",
+                    "w": 600,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Red Lily T-Shirt - black t-shirt with red lily print"
+        },
+        {
+            "name": "product-f5",
+            "kebab": "product-f5",
+            "purpose": "Featured product: Purple Blossom T-Shirt",
+            "variants": [
+                {
+                    "id": "default",
+                    "file": "/img/products/f5.jpg",
+                    "w": 600,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Purple Blossom T-Shirt - light shirt with purple blossom pattern"
+        },
+        {
+            "name": "product-f6",
+            "kebab": "product-f6",
+            "purpose": "Featured product: Duo Color Shirt",
+            "variants": [
+                {
+                    "id": "default",
+                    "file": "/img/products/f6.jpg",
+                    "w": 600,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Duo Color Shirt - two-tone casual shirt"
+        },
+        {
+            "name": "product-f7",
+            "kebab": "product-f7",
+            "purpose": "Featured product: Modern Style Pants",
+            "variants": [
+                {
+                    "id": "default",
+                    "file": "/img/products/f7.jpg",
+                    "w": 600,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Modern Style Pants - contemporary casual trousers"
+        },
+        {
+            "name": "product-f8",
+            "kebab": "product-f8",
+            "purpose": "Featured product: Designed Top for Women",
+            "variants": [
+                {
+                    "id": "default",
+                    "file": "/img/products/f8.jpg",
+                    "w": 600,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Designed Top for Women - fashionable women's blouse"
+        },
+        {
+            "name": "icon-set",
+            "kebab": "icon-set",
+            "purpose": "12 core e-commerce icons for UI elements (cart, search, user, shipping, gift, savings, support, phone, email, wishlist, rating, tag)",
+            "variants": [
+                {
+                    "id": "grid",
+                    "file": "/stitch_outputs/icons/icon-set-grid.png",
+                    "w": 1024,
+                    "h": 1024
+                }
+            ],
+            "alt_text": "E-commerce icon set - 12 teal accent line-art icons for shopping, navigation, and account",
+            "meta": "/stitch_outputs/icons/meta.json"
+        },
+        {
+            "name": "product-card-plate",
+            "kebab": "product-card-plate",
+            "purpose": "Rounded light plate background for product cards with soft inner shadow",
+            "variants": [
+                {
+                    "id": "card",
+                    "file": "/stitch_outputs/ui/product-card-plate.webp",
+                    "w": 600,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Product card decorative background plate with soft shadow"
+        },
+        {
+            "name": "banner-hero",
+            "kebab": "banner-hero",
+            "purpose": "Hero background texture/pattern for the hero section",
+            "variants": [
+                {
+                    "id": "desktop",
+                    "file": "/img/hero4.png",
+                    "w": 1920,
+                    "h": 1080
+                }
+            ],
+            "alt_text": "Fashion hero background with female model in casual wear"
+        },
+        {
+            "name": "banner-promo",
+            "kebab": "banner-promo",
+            "purpose": "Full-bleed promo banner background image for 70% off section",
+            "variants": [
+                {
+                    "id": "desktop",
+                    "file": "/img/banner/b2.jpg",
+                    "w": 1920,
+                    "h": 600
+                }
+            ],
+            "alt_text": "Fashion lifestyle promo banner background"
+        },
+        {
+            "name": "logo",
+            "kebab": "logo",
+            "purpose": "Cara brand logo",
+            "variants": [
+                {
+                    "id": "default",
+                    "file": "/img/logo.png",
+                    "w": 200,
+                    "h": 60
+                }
+            ],
+            "alt_text": "Cara - Fashion & Lifestyle Store Logo"
+        }
+    ]
+}

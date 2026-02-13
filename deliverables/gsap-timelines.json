@@ -1,0 +1,324 @@
+[
+    {
+        "id": "hero",
+        "section": "hero",
+        "triggers": {
+            "onLoad": true,
+            "prefersReducedMotion": false
+        },
+        "timeline": [
+            {
+                "action": "fadeIn",
+                "target": ".hero-bg",
+                "from": {
+                    "opacity": 0
+                },
+                "to": {
+                    "opacity": 1
+                },
+                "duration": 0.6,
+                "ease": "power2.out"
+            },
+            {
+                "action": "staggerIn",
+                "target": ".hero-title .line",
+                "from": {
+                    "y": 30,
+                    "opacity": 0
+                },
+                "stagger": 0.12,
+                "duration": 0.6,
+                "ease": "power2.out"
+            },
+            {
+                "action": "fadeIn",
+                "target": ".hero-subtitle",
+                "from": {
+                    "y": 15,
+                    "opacity": 0
+                },
+                "duration": 0.4,
+                "ease": "power2.out",
+                "delay": 0.3
+            },
+            {
+                "action": "scaleIn",
+                "target": ".hero-cta",
+                "from": {
+                    "scale": 0.95,
+                    "opacity": 0
+                },
+                "duration": 0.35,
+                "ease": "back.out(1.7)"
+            },
+            {
+                "action": "clipPathReveal",
+                "target": "#hero-model",
+                "from": {
+                    "clipPath": "inset(0 100% 0 0)"
+                },
+                "to": {
+                    "clipPath": "inset(0 0% 0 0)"
+                },
+                "duration": 0.9,
+                "ease": "power3.inOut",
+                "notes": "Use CSS clip-path inset for horizontal reveal; simpler than canvas frame sequence and GPU-accelerated"
+            },
+            {
+                "action": "loop",
+                "target": "#hero-model",
+                "type": "breathe",
+                "props": {
+                    "y": -3,
+                    "duration": 3,
+                    "repeat": -1,
+                    "yoyo": true,
+                    "ease": "sine.inOut"
+                },
+                "notes": "Pause when hero leaves viewport via ScrollTrigger; use will-change:transform"
+            }
+        ],
+        "reducedMotionFallback": {
+            "target": ".hero-bg, .hero-title .line, .hero-subtitle, .hero-cta, #hero-model",
+            "action": "immediate",
+            "to": {
+                "opacity": 1,
+                "y": 0,
+                "scale": 1,
+                "clipPath": "inset(0 0% 0 0)"
+            }
+        }
+    },
+    {
+        "id": "product-grid",
+        "section": "product-grid",
+        "triggers": {
+            "onScroll": "#product-grid",
+            "batch": true,
+            "start": "top 85%"
+        },
+        "timeline": [
+            {
+                "action": "batchReveal",
+                "target": ".product-card",
+                "from": {
+                    "y": 24,
+                    "opacity": 0,
+                    "scale": 0.97
+                },
+                "stagger": 0.08,
+                "duration": 0.6,
+                "ease": "power2.out",
+                "batchSize": 4,
+                "notes": "Use ScrollTrigger.batch() with interval:0.08 for grid reveal"
+            }
+        ],
+        "hoverInteractions": [
+            {
+                "target": ".product-card img",
+                "on": "mousemove",
+                "action": "microParallax",
+                "strength": 4,
+                "notes": "Use gsap.quickTo() for throttled mousemove updates; disable on touch devices"
+            },
+            {
+                "target": ".product-card .cart-btn",
+                "on": "click",
+                "action": "pulse",
+                "props": {
+                    "scale": [
+                        1,
+                        1.15,
+                        1
+                    ],
+                    "duration": 0.3
+                }
+            }
+        ],
+        "reducedMotionFallback": {
+            "target": ".product-card",
+            "action": "immediate",
+            "to": {
+                "opacity": 1,
+                "y": 0,
+                "scale": 1
+            }
+        }
+    },
+    {
+        "id": "feature-boxes",
+        "section": "feature-boxes",
+        "triggers": {
+            "onScroll": "#feature",
+            "start": "top 80%"
+        },
+        "timeline": [
+            {
+                "action": "staggerIn",
+                "target": ".fe-box",
+                "from": {
+                    "y": 20,
+                    "opacity": 0,
+                    "scale": 0.95
+                },
+                "stagger": 0.1,
+                "duration": 0.5,
+                "ease": "power2.out"
+            }
+        ],
+        "hoverInteractions": [
+            {
+                "target": ".fe-box",
+                "on": "mouseenter",
+                "action": "elevate",
+                "props": {
+                    "y": -4,
+                    "boxShadow": "0 12px 32px rgba(0,0,0,0.15)",
+                    "duration": 0.25
+                }
+            },
+            {
+                "target": ".fe-box",
+                "on": "mouseleave",
+                "action": "settle",
+                "props": {
+                    "y": 0,
+                    "boxShadow": "0 2px 8px rgba(0,0,0,0.06)",
+                    "duration": 0.25
+                }
+            }
+        ]
+    },
+    {
+        "id": "promo-banner",
+        "section": "promo-banner",
+        "triggers": {
+            "onScroll": "#banner",
+            "start": "top 75%"
+        },
+        "timeline": [
+            {
+                "action": "clipPathReveal",
+                "target": "#banner .content-wrapper",
+                "from": {
+                    "clipPath": "circle(0% at 50% 50%)"
+                },
+                "to": {
+                    "clipPath": "circle(75% at 50% 50%)"
+                },
+                "duration": 0.8,
+                "ease": "power3.out"
+            },
+            {
+                "action": "countUp",
+                "target": "#banner .discount-number",
+                "from": {
+                    "innerText": 0
+                },
+                "to": {
+                    "innerText": 70
+                },
+                "duration": 1.2,
+                "snap": {
+                    "innerText": 1
+                },
+                "delay": 0.3
+            }
+        ],
+        "loopEffects": [
+            {
+                "target": "#banner .discount-number",
+                "action": "pulse",
+                "props": {
+                    "scale": [
+                        1,
+                        1.08,
+                        1
+                    ],
+                    "duration": 2,
+                    "repeat": -1,
+                    "ease": "sine.inOut"
+                }
+            }
+        ]
+    },
+    {
+        "id": "product-detail",
+        "section": "product-detail",
+        "triggers": {
+            "onLoad": true
+        },
+        "timeline": [
+            {
+                "action": "fadeIn",
+                "target": ".main-product-image",
+                "from": {
+                    "opacity": 0,
+                    "scale": 0.98
+                },
+                "duration": 0.5,
+                "ease": "power2.out"
+            },
+            {
+                "action": "staggerIn",
+                "target": ".thumbnail-image",
+                "from": {
+                    "opacity": 0,
+                    "y": 10
+                },
+                "stagger": 0.08,
+                "duration": 0.4,
+                "delay": 0.3
+            },
+            {
+                "action": "slideIn",
+                "target": ".product-details",
+                "from": {
+                    "x": 30,
+                    "opacity": 0
+                },
+                "duration": 0.5,
+                "ease": "power2.out",
+                "delay": 0.2
+            }
+        ],
+        "gallerySwap": {
+            "target": ".main-product-image",
+            "action": "crossfade",
+            "duration": 0.3,
+            "ease": "power1.inOut",
+            "notes": "On thumbnail click, crossfade main image; use GSAP timeline with opacity swap"
+        }
+    },
+    {
+        "id": "newsletter",
+        "section": "newsletter",
+        "triggers": {
+            "onScroll": "#newsletter",
+            "start": "top 80%"
+        },
+        "timeline": [
+            {
+                "action": "slideIn",
+                "target": ".newstext",
+                "from": {
+                    "x": -30,
+                    "opacity": 0
+                },
+                "duration": 0.5,
+                "ease": "power2.out"
+            },
+            {
+                "action": "slideIn",
+                "target": ".newsletter-form",
+                "from": {
+                    "x": 30,
+                    "opacity": 0
+                },
+                "duration": 0.5,
+                "ease": "power2.out",
+                "delay": 0.15
+            }
+        ]
+    }
+]

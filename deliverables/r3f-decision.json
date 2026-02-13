@@ -1,0 +1,29 @@
+{
+    "decisions": [
+        {
+            "component": "hero",
+            "useR3F": false,
+            "reason": "The hero section uses a split-layout with model image + GSAP clip-path reveal and breathing loop. These 2D CSS/GSAP animations achieve premium visual impact without adding ~150KB+ R3F/Three.js bundle overhead. The clip-path reveal is GPU-accelerated and lighter than canvas-based 3D rendering.",
+            "alternative": "GSAP clip-path inset animation + breathing translateY loop"
+        },
+        {
+            "component": "product-detail-viewer",
+            "useR3F": false,
+            "reason": "Standard product views (t-shirts, pants) don't benefit from 3D rotation — flat photography with hover image-swap provides equivalent product understanding at zero GPU cost. 3D would only be justified for complex products (shoes, accessories) requiring true 360° inspection.",
+            "alternative": "GSAP crossfade gallery with thumbnail navigation + micro-parallax hover",
+            "condition_to_reconsider": "If product line expands to shoes/accessories where interactive 360° viewing demonstrably increases conversion rate (A/B test required)"
+        },
+        {
+            "component": "product-spotlight",
+            "useR3F": false,
+            "reason": "3D adds visual appeal but will increase bundle size (~150KB Three.js + model assets) and GPU usage on mobile devices; recommended to use animated 2D sprite/sequence unless interactive 360° view is explicitly required by product type.",
+            "fallback_image": "/img/products/f1.jpg"
+        }
+    ],
+    "global_policy": {
+        "default": "DO NOT USE R3F",
+        "justification": "Cara is a fashion/lifestyle store selling primarily apparel. 2D photography with GSAP micro-interactions (parallax, crossfade, breathing loops) provides equivalent or better visual engagement than 3D at a fraction of the bundle cost and complexity. R3F adds ~150KB+ gzipped to the JS bundle and requires WebGL support.",
+        "lazy_load_plan": "If R3F is ever added: dynamic(() => import('./R3FViewer'), { ssr: false }) with IntersectionObserver trigger",
+        "fallback_requirement": "All R3F components MUST include a static <img> fallback for non-WebGL devices and prefers-reduced-motion users"
+    }
+}

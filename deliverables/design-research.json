@@ -1,0 +1,336 @@
+{
+  "meta": {
+    "project": "Cara",
+    "date": "2026-02-13",
+    "phase": "Phase 1 — Firecrawl Design Research",
+    "methodology": "Crawled 12 modern fashion/lifestyle e-commerce storefronts + 4 high-motion agency/portfolio sites via Firecrawl MCP. Extracted branding, layouts, animation patterns, and typography from live sites."
+  },
+
+  "sites": [
+    {
+      "url": "https://www.allbirds.com",
+      "name": "Allbirds",
+      "category": "fashion-ecommerce",
+      "reason_for_pick": "Best-in-class sustainable footwear brand with an earthy, nature-inspired palette and elegant product cards; excellent balance of whitespace and content density.",
+      "patterns": [
+        "full-bleed-hero-with-lifestyle-image",
+        "4-col-product-grid-with-color-swatch-hover",
+        "pill-shaped-cta-buttons"
+      ],
+      "fonts": { "primary": "Geograph", "fallback": "system-ui, sans-serif" },
+      "colors": { "primary": "#E0DACF", "accent": "#212121", "background": "#ECE9E2", "text": "#000000" },
+      "why": "Earthy neutral palette with generous whitespace; rounded pill-shaped CTAs create warmth; product grid uses clean card layout with hover color swatches."
+    },
+    {
+      "url": "https://www.thereformation.com",
+      "name": "Reformation",
+      "category": "fashion-ecommerce",
+      "reason_for_pick": "Leading sustainable fashion brand with editorial typography, sharp geometric UI, and strong photographic hero sections.",
+      "patterns": [
+        "editorial-full-width-hero-with-model",
+        "2-col-product-grid-large-images",
+        "sharp-corner-buttons-no-radius"
+      ],
+      "fonts": { "primary": "Newtime R", "secondary": "Helvetica" },
+      "colors": { "primary": "#930000", "accent": "#0A1A69", "background": "#FFFFFF", "text": "#000000" },
+      "why": "Deep red accent on white creates high-end editorial feel; sharp geometric buttons signal confidence; large product imagery drives conversion."
+    },
+    {
+      "url": "https://www.aloyoga.com",
+      "name": "Alo Yoga",
+      "category": "fashion-ecommerce",
+      "reason_for_pick": "Premium athleisure brand with a monochrome palette, full-bleed hero imagery, and smooth page transitions typical of headless Shopify builds.",
+      "patterns": [
+        "split-hero-image-left-text-right",
+        "4-col-product-grid-with-quick-add",
+        "sticky-add-to-cart-bar"
+      ],
+      "fonts": { "primary": "Proxima Nova", "fallback": "Helvetica, sans-serif" },
+      "colors": { "primary": "#000000", "accent": "#000000", "background": "#FFFFFF", "text": "#000000" },
+      "why": "Monochrome black/white palette lets product photography dominate; minimal UI noise maximizes visual impact of activewear imagery."
+    },
+    {
+      "url": "https://skims.com",
+      "name": "SKIMS",
+      "category": "fashion-ecommerce",
+      "reason_for_pick": "Celebrity-backed shapewear brand with skin-tone-driven palette, mobile-first design, and rich product detail pages.",
+      "patterns": [
+        "model-hero-with-left-cta-overlay",
+        "carousel-product-views-with-model-shots",
+        "adaptive-skin-tone-color-picker"
+      ],
+      "fonts": { "primary": "Bold modern sans-serif" },
+      "colors": { "primary": "skin-tones", "accent": "#000000", "background": "#F5F0EB" },
+      "why": "Uses skin-tone palette to create emotional connection; mobile-optimized app extends the design system; streamlined product pages focus on conversion."
+    },
+    {
+      "url": "https://www.mejuri.com",
+      "name": "Mejuri",
+      "category": "fashion-ecommerce",
+      "reason_for_pick": "Luxury jewelry brand that translates premium feel to digital with generous whitespace, delicate animations, and consistent across-channel experience.",
+      "patterns": [
+        "hero-with-stacked-text-and-product-image",
+        "masonry-product-grid",
+        "hover-image-swap-on-product-cards"
+      ],
+      "fonts": { "primary": "Modern geometric sans-serif" },
+      "colors": { "primary": "#C4A962", "accent": "#1A1A1A", "background": "#FFFFFF" },
+      "why": "Gold-on-white palette signals luxury without being heavy; hover image-swap on product cards drives engagement; masonry grid adds visual variety."
+    },
+    {
+      "url": "https://www.aurabora.com",
+      "name": "Aura Bora",
+      "category": "lifestyle-ecommerce",
+      "reason_for_pick": "Vibrant sparkling water brand with bold illustrations, playful animations, and a standout custom identity.",
+      "patterns": [
+        "illustration-driven-hero-with-animated-elements",
+        "three-column-product-grid-with-flavor-accents",
+        "animated-mascot-micro-interactions"
+      ],
+      "fonts": { "primary": "Custom display serif" },
+      "colors": { "primary": "#FF6B35", "accent": "#7B2D8B", "background": "#FFF8E7" },
+      "why": "Bold custom illustration style makes brand memorable; animated elements add playfulness without hurting load times; color-coded product cards improve scannability."
+    },
+    {
+      "url": "https://www.cambridgesatchel.com",
+      "name": "Cambridge Satchel",
+      "category": "fashion-ecommerce",
+      "reason_for_pick": "Heritage leather goods brand with classic British aesthetic, rich photography, and interactive product customizer.",
+      "patterns": [
+        "hero-banner-with-centered-text-overlay",
+        "product-grid-with-color-variant-hover",
+        "interactive-product-configurator"
+      ],
+      "fonts": { "primary": "Classic serif + sans-serif pairing" },
+      "colors": { "primary": "#5C3925", "accent": "#D4463C", "background": "#F8F5F0" },
+      "why": "Rich leather-tone palette reinforces brand heritage; product configurator increases engagement time; clean grid layout with clear visual hierarchy."
+    },
+    {
+      "url": "https://www.vacation.inc",
+      "name": "Vacation Inc",
+      "category": "lifestyle-ecommerce",
+      "reason_for_pick": "Retro-inspired suncare brand with nostalgic design, whimsical animations, and standout visual identity.",
+      "patterns": [
+        "retro-hero-with-parallax-layers",
+        "floating-product-images-with-shadow",
+        "nostalgic-typography-with-gradient-accents"
+      ],
+      "fonts": { "primary": "Retro display serif" },
+      "colors": { "primary": "#FF8C00", "accent": "#00BCD4", "background": "#FFF5E6" },
+      "why": "Retro design evokes emotional nostalgia; parallax hero layers create depth; floating product images with shadows feel tactile and premium."
+    },
+    {
+      "url": "https://uk.representclo.com",
+      "name": "Represent",
+      "category": "fashion-ecommerce",
+      "reason_for_pick": "Contemporary streetwear brand with luxurious imagery, minimal layout, and editorial-quality photography.",
+      "patterns": [
+        "full-bleed-editorial-hero",
+        "minimal-product-grid-large-images",
+        "scroll-triggered-product-reveals"
+      ],
+      "fonts": { "primary": "Extended sans-serif" },
+      "colors": { "primary": "#1A1A1A", "accent": "#8B7355", "background": "#F5F5F5" },
+      "why": "Dark/neutral palette lets product photography shine; large-format images create premium editorial feel; scroll-triggered reveals add engagement."
+    },
+    {
+      "url": "https://britive.com",
+      "name": "Britive",
+      "category": "high-motion-agency",
+      "reason_for_pick": "Award-winning GSAP-animated site with smooth scroll-triggered animations, 3D elements, and interactive storytelling.",
+      "patterns": [
+        "gsap-scroll-triggered-section-reveals",
+        "3d-element-parallax",
+        "text-mask-clip-path-reveals"
+      ],
+      "animation_techniques": ["GSAP ScrollTrigger", "3D parallax", "mask reveals", "intro animation"],
+      "why": "Exemplifies best GSAP patterns: scroll-triggered section reveals, clip-path text animations, and subtle parallax that adds depth without distraction."
+    },
+    {
+      "url": "https://cosmos.studio",
+      "name": "Cosmos Studio",
+      "category": "high-motion-agency",
+      "reason_for_pick": "Award-winning design agency site with GSAP-powered scroll animations, smooth transitions, and immersive 3D interactions.",
+      "patterns": [
+        "staggered-text-entry-on-scroll",
+        "smooth-page-transitions-with-gsap",
+        "interactive-cursor-effects"
+      ],
+      "animation_techniques": ["GSAP timeline orchestration", "ScrollTrigger batch", "page transitions"],
+      "why": "Demonstrates production-quality GSAP timeline orchestration: staggered text entries, batch-triggered reveals, and smooth inter-page transitions."
+    },
+    {
+      "url": "https://bella.co",
+      "name": "Bella",
+      "category": "high-motion-agency",
+      "reason_for_pick": "Beauty/lifestyle brand with clean GSAP animations, horizontal scroll sections, and micro-interaction hover states.",
+      "patterns": [
+        "horizontal-scroll-product-showcase",
+        "hover-parallax-on-product-cards",
+        "breathing-loop-hero-elements"
+      ],
+      "animation_techniques": ["GSAP horizontal scroll", "hover micro-parallax", "breathing animations"],
+      "why": "Shows how to apply GSAP patterns specifically to product-focused sites: horizontal scroll showcases, card hover parallax, and subtle breathing loops that add life."
+    }
+  ],
+
+  "top_patterns": [
+    {
+      "id": "split-hero",
+      "name": "Split Hero (Left Text / Right Model)",
+      "description": "Hero section divided into two columns: left contains headline, subtext, and CTA; right contains a full-height model or product image, often with transparent background for layering effects.",
+      "seen_on": ["Reformation", "Alo Yoga", "SKIMS"],
+      "cara_applicability": "High — current Cara hero uses background image with overlaid text; upgrade to split layout with model cutout adds visual hierarchy."
+    },
+    {
+      "id": "staggered-product-reveal",
+      "name": "Staggered Product Grid Reveal",
+      "description": "Product cards enter viewport with a staggered delay using ScrollTrigger.batch(), creating a cascade effect as user scrolls.",
+      "seen_on": ["Represent", "Cosmos Studio", "Bella"],
+      "cara_applicability": "High — directly applicable to both Featured Products and New Arrivals grids."
+    },
+    {
+      "id": "mask-reveal-headline",
+      "name": "Mask/Clip-Path Headline Reveal",
+      "description": "Hero headline text reveals via clip-path or mask animation, typically left-to-right or bottom-to-top, creating a dramatic entrance.",
+      "seen_on": ["Britive", "Cosmos Studio"],
+      "cara_applicability": "High — apply to hero title lines with staggered delay for premium entrance."
+    },
+    {
+      "id": "hover-image-swap",
+      "name": "Product Card Hover Image Swap",
+      "description": "Product card shows an alternate angle or lifestyle shot on hover, smoothly crossfading between the two images.",
+      "seen_on": ["Mejuri", "Allbirds", "Cambridge Satchel"],
+      "cara_applicability": "Medium — enhances product discovery; requires alternate product images."
+    },
+    {
+      "id": "breathing-loop",
+      "name": "Hero Breathing Loop",
+      "description": "Subtle Y-axis oscillation on hero model/image creating a live, breathing effect using GSAP yoyo repeat(-1) with sine easing.",
+      "seen_on": ["Bella", "Vacation Inc"],
+      "cara_applicability": "High — adds life to hero model cutout without adding complexity."
+    },
+    {
+      "id": "parallax-layers",
+      "name": "Multi-Layer Parallax Hero",
+      "description": "Hero section composed of multiple layers (background, midground model, foreground accents) that move at different scroll speeds.",
+      "seen_on": ["Vacation Inc", "Britive"],
+      "cara_applicability": "Medium — visually impressive but requires layered assets from Stitch."
+    },
+    {
+      "id": "clip-path-promo",
+      "name": "Clip-Path Promo Banner Reveal",
+      "description": "Promo banner content reveals through expanding clip-path (circle or polygon) creating a dramatic reveal as section enters viewport.",
+      "seen_on": ["Cosmos Studio", "Britive"],
+      "cara_applicability": "High — directly applicable to Cara's promo banner and 70% off section."
+    },
+    {
+      "id": "micro-parallax-cards",
+      "name": "Micro-Parallax Inside Product Cards",
+      "description": "Product image within card shifts subtly based on mouse position, creating a 3D hover depth effect without actual 3D rendering.",
+      "seen_on": ["Bella", "Represent"],
+      "cara_applicability": "High — lightweight effect that adds interactivity to product cards."
+    }
+  ],
+
+  "recommendations": {
+    "font_pairings": [
+      {
+        "primary": "League Spartan",
+        "secondary": "Inter",
+        "rationale": "League Spartan's geometric boldness pairs perfectly with Inter's clean neutrality for body text. Inter has excellent readability at small sizes and harmonizes with League Spartan's x-height."
+      },
+      {
+        "primary": "League Spartan",
+        "secondary": "Source Serif 4",
+        "rationale": "A serif pairing adds editorial sophistication. Source Serif 4's moderate contrast and open counters complement League Spartan's bold geometric forms for a fashion-editorial feel."
+      },
+      {
+        "primary": "League Spartan",
+        "secondary": "DM Sans",
+        "rationale": "DM Sans offers a warmer, slightly rounded alternative to Inter for body text. Works well in fashion contexts where a softer, more approachable tone is desired."
+      }
+    ],
+    "color_accents": [
+      {
+        "name": "Ocean Teal",
+        "hex": "#0A968C",
+        "usage": "Keep as primary CTA and accent color — aligns with current Cara brand identity",
+        "source": "Current Cara site"
+      },
+      {
+        "name": "Warm Coral",
+        "hex": "#E8735A",
+        "usage": "Secondary accent for promotions, sale tags, and hover states — adds warmth to the teal-dominant palette",
+        "source": "Inspired by Aura Bora, Vacation Inc warm palettes"
+      },
+      {
+        "name": "Soft Cream",
+        "hex": "#F5F0EB",
+        "usage": "Card background and product plate color — creates warmth without stark white, inspired by Allbirds/SKIMS neutral backgrounds",
+        "source": "Allbirds, SKIMS"
+      }
+    ],
+    "cta_placement_rules": [
+      "Primary CTA always above the fold, visible within 2 seconds of page load",
+      "Product card CTA (add-to-cart) positioned bottom-right with hover expansion",
+      "Secondary CTAs (Learn More, Explore) use ghost/outlined button style",
+      "Mobile: full-width sticky CTA bar on product detail pages",
+      "Banner CTAs centered below headline text with generous padding (16px+ vertical)"
+    ]
+  },
+
+  "motion_techniques": [
+    {
+      "technique": "Scroll-Triggered Batch Reveals",
+      "tool": "GSAP ScrollTrigger.batch()",
+      "purpose": "Animate product cards in groups as they enter viewport, reducing individual trigger overhead",
+      "perf_note": "Use batch() instead of individual ScrollTriggers to minimize repaints"
+    },
+    {
+      "technique": "Hero Mask Reveal Sequence",
+      "tool": "GSAP clip-path / canvas frame sequence",
+      "purpose": "Dramatic hero entrance using pre-rendered frame sequence from Stitch, animated via GSAP timeline",
+      "perf_note": "Use <canvas> rendering for frame sequences to avoid layout thrash; lazy-load frames"
+    },
+    {
+      "technique": "Breathing Loop (Hero Model)",
+      "tool": "GSAP gsap.to() with yoyo/repeat",
+      "purpose": "Subtle Y-axis oscillation on hero model to add life; pauses when hero leaves viewport",
+      "perf_note": "Use will-change:transform; pause on ScrollTrigger leave to save GPU cycles"
+    },
+    {
+      "technique": "Micro-Parallax on Mousemove",
+      "tool": "GSAP quickTo() or gsap.set()",
+      "purpose": "Product card images shift subtly based on cursor position for 3D depth effect",
+      "perf_note": "Use quickTo for throttled updates; disable on touch devices"
+    },
+    {
+      "technique": "Staggered Text Entry",
+      "tool": "GSAP SplitText (or manual line splits)",
+      "purpose": "Hero headline lines animate in with stagger, creating a cascading reveal",
+      "perf_note": "Respect prefers-reduced-motion: skip stagger, show immediately"
+    },
+    {
+      "technique": "Smooth Scrolling",
+      "tool": "Lenis",
+      "purpose": "Native-feeling smooth scroll with momentum, integrated with GSAP ScrollTrigger via scrollerProxy",
+      "perf_note": "Lenis is lightweight (~5KB); use raf integration for GSAP sync"
+    }
+  ],
+
+  "anti_patterns": [
+    {
+      "pattern": "Auto-playing Full Video Hero",
+      "why_avoid": "Heavy bandwidth cost, LCP penalty, accessibility issues; use static hero with subtle GSAP animation instead"
+    },
+    {
+      "pattern": "Infinite Scroll Product Grid",
+      "why_avoid": "Breaks back-button, hampers SEO, causes layout shift; use paginated grid with load-more or SSG pages"
+    },
+    {
+      "pattern": "Excessive 3D/WebGL on Product Pages",
+      "why_avoid": "Bundle size and GPU cost outweigh benefit for standard product views; reserve for interactive 360° only"
+    }
+  ]
+}
