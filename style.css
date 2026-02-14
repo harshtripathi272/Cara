@@ -881,6 +881,10 @@ button.white {
   padding: 20px;
   justify-content: flex-end;
   overflow: hidden;
+  background-color: #333;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Fallback color to prevent white blocking */
 }
 
 #banner3 .banner-box>* {
@@ -897,11 +901,22 @@ button.white {
 }
 
 #banner3 .banner-box:nth-child(2) {
-  background-image: url('img/banner/b17.jpg');
+  background-image: url('img/banner/footwear_v5.png') !important;
 }
 
-#banner3 .banner-box:nth-child(3) {
-  background-image: url('img/banner/tshirt_dark.png');
+#banner3 .banner-box:nth-child(2) h2 {
+  color: #333 !important;
+  text-shadow: none !important;
+}
+
+#banner3 .banner-box:nth-child(2) h3 {
+  color: #ec544e !important;
+  text-shadow: none !important;
+}
+
+#banner3 .banner-box:nth-child(3),
+#banner3 .banner-box.banner-box3 {
+  background-image: url('img/banner/tshirt_v3.png') !important;
   background-position: center;
   background-size: cover;
 }
