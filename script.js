@@ -2,18 +2,18 @@ const bar = document.getElementById('bar');
 const close = document.getElementById('close');
 const nav = document.getElementById('navbar');
 
-<<<<<<< Updated upstream
-if(bar){
-    bar.addEventListener('click', () =>{
+if (bar) {
+    bar.addEventListener('click', () => {
         nav.classList.add('active');
-    })
+    });
 }
-if(close){
-    close.addEventListener('click', () =>{
+
+if (close) {
+    close.addEventListener('click', () => {
         nav.classList.remove('active');
-    })
+    });
 }
-=======
+
 // ──────────────── UTILITY ────────────────
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
@@ -271,7 +271,7 @@ function initScrollAnimations() {
     });
 
     // Banner3 boxes
-    const banner3Boxes = $$('.banner3-box');
+    const banner3Boxes = $$('#banner3 .banner-box');
     if (banner3Boxes.length) {
         ScrollTrigger.batch(banner3Boxes, {
             onEnter: (batch) => {
@@ -286,7 +286,7 @@ function initScrollAnimations() {
 
     // Newsletter
     const newsText = $('.newstext');
-    const newsForm = $('.newsletter-form');
+    const newsForm = $('.form');
     if (newsText) {
         gsap.from(newsText, {
             x: -30, opacity: 0, duration: 0.6, ease: 'power2.out',
@@ -367,20 +367,22 @@ function initMicroInteractions() {
 
     $$('.cart').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (!prefersReducedMotion) {
+            const link = btn.closest('a');
+            if (!prefersReducedMotion && link) {
+                e.preventDefault();
                 gsap.fromTo(btn, { scale: 1 }, {
-                    scale: 1.3, duration: 0.15, yoyo: true, repeat: 1, ease: 'power1.inOut'
+                    scale: 1.3, duration: 0.15, yoyo: true, repeat: 1, ease: 'power1.inOut',
+                    onComplete: () => { window.location.href = link.href; }
                 });
             }
+            // If reduced motion or no link, allow default navigation
         });
     });
 }
 
 // ──────────────── NEWSLETTER FORM ────────────────
 function initNewsletter() {
-    const form = $('.newsletter-form');
+    const form = $('.form');
     if (!form) return;
 
     form.addEventListener('submit', (e) => {
@@ -418,4 +420,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initMicroInteractions();
     initNewsletter();
 });
->>>>>>> Stashed changes
+
