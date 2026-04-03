@@ -2723,8 +2723,9 @@ footer .install img:last-child {
 }
 
 .cta-2 {
-    bottom: 4%;
-    left: 8%;
+    bottom: 5%;
+    right: 20%;
+    left: auto;
     top: auto;
     z-index: 2;
     animation-delay: 2s;
