@@ -2609,3 +2609,145 @@ footer .install img:last-child {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* --- Hero Section Extras --- */
+#hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface) radial-gradient(circle at 20% 0%, rgba(200, 200, 255, 0.08) 0%, transparent 50%) no-repeat;
+}
+
+#hero::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(120, 150, 255, 0.05) 0%, transparent 60%);
+  top: -100px;
+  left: -200px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#hero::after {
+  content: '';
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(200, 100, 255, 0.04) 0%, transparent 60%);
+  bottom: -300px;
+  right: -200px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-container {
+  position: relative;
+  z-index: 1;
+}
+/* --- Hero Section Background Overrides & Floating CTAs --- */
+#hero {
+    /* Using important or just relying on cascade for the background */
+    background:
+        linear-gradient(rgba(10, 10, 20, 0.7), rgba(20, 20, 40, 0.8)),
+        url('img/banner/b1.jpg') center/cover no-repeat !important;
+}
+
+/* Ensure the glowing orbs we added still look cool behind the darkened texture */
+#hero::before {
+    background: radial-gradient(circle, rgba(120, 150, 255, 0.15) 0%, transparent 60%);
+}
+
+#hero::after {
+    background: radial-gradient(circle, rgba(200, 100, 255, 0.15) 0%, transparent 60%);
+}
+
+/* Make sure header text pops over dark background */
+.hero-subtitle {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Floating CTAs Styles */
+.floating-cta {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 12px 20px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    color: white;
+    z-index: 5;
+    animation: floatEffect 6s ease-in-out infinite;
+    pointer-events: none;
+    /* Just decorative */
+}
+
+.floating-cta i {
+    font-size: 1.5rem;
+    color: #ffb4a2;
+    /* Soft warm accent */
+    text-shadow: 0 0 10px rgba(255, 180, 162, 0.5);
+}
+
+.floating-cta .cta-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.floating-cta .cta-text strong {
+    font-size: 0.95rem;
+    line-height: 1.2;
+}
+
+.floating-cta .cta-text span {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Position them around the hero section */
+.cta-1 {
+    top: 15%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.cta-2 {
+    bottom: 25%;
+    right: 5%;
+    animation-delay: 3s;
+    /* offset float timing */
+}
+
+@keyframes floatEffect {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@media (max-width: 1024px) {
+    .cta-1 {
+        top: 5%;
+        left: 0%;
+        transform: scale(0.85);
+    }
+
+    .cta-2 {
+        bottom: 5%;
+        right: 0%;
+        transform: scale(0.85);
+    }
+}
