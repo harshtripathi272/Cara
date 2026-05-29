@@ -20,14 +20,24 @@ import requests
 from supabase import create_client, Client
 
 # -- Config --
-SUPABASE_URL = os.environ.get(
-    "SUPABASE_URL",
-    "https://lvifaalxebugbsanpucn.supabase.co",
-)
-SUPABASE_KEY = os.environ.get(
-    "SUPABASE_KEY",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aWZhYWx4ZWJ1Z2JzYW5wdWNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDg3NjIsImV4cCI6MjA5NTYyNDc2Mn0.MMKtpAMv0zQbTn3sapyoof1YCDG_gU4VCAF-3snQUVo",
-)
+def load_env_file():
+    # Look for .env.local in the root directory
+    env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env.local")
+    if os.path.exists(env_path):
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ[k.strip()] = v.strip()
+
+load_env_file()
+
+SUPABASE_URL = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY") or os.environ.get("SUPABASE_KEY")
+
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise ValueError("Missing Supabase credentials. Please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set in your environment or .env.local file.")
 
 DATASET_REPO = "McAuley-Lab/Amazon-Reviews-2023"
 
