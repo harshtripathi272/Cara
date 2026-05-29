@@ -15,6 +15,7 @@ export default function CartDrawer({ onClose }: CartDrawerProps) {
   return (
     <AnimatePresence>
       <motion.div
+        key="cart-overlay"
         className="cart-overlay"
         onClick={onClose}
         initial={{ opacity: 0 }}
@@ -23,6 +24,7 @@ export default function CartDrawer({ onClose }: CartDrawerProps) {
         transition={{ duration: 0.2 }}
       />
       <motion.div
+        key="cart-drawer-panel"
         className="cart-drawer"
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
