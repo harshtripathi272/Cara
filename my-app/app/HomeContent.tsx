@@ -26,6 +26,16 @@ const categoryColors: Record<string, string> = {
 
 const categoryImages: Record<string, string> = {};
 
+// Simple string hash function to generate a stable hue value
+const getStableColor = (name: string) => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash % 360);
+  return `hsl(${hue}, 30%, 20%)`;
+};
+
 export default function HomeContent({
   featured,
   newArrivals,
@@ -112,7 +122,7 @@ export default function HomeContent({
                 href={`/shop?category=${encodeURIComponent(cat.category)}`}
                 bgColor={
                   categoryColors[cat.category] ||
-                  `hsl(${Math.random() * 360}, 30%, 20%)`
+                  getStableColor(cat.category)
                 }
                 imageUrl={categoryImages[cat.category]}
               />

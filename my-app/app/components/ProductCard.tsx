@@ -12,13 +12,23 @@ type ProductCardProps = {
   showBadge?: boolean;
 };
 
+// Simple string hash function to generate a stable pseudo-random value between 0 and 1
+const getStableRandom = (str: string) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash % 1000) / 1000;
+};
+
 export default function ProductCard({
   product,
   rank,
   onClick,
   showBadge = true,
 }: ProductCardProps) {
-  const hasDiscount = product.price && product.price > 20 && Math.random() > 0.7;
+  const stableRandom = product.id ? getStableRandom(product.id) : 0.5;
+  const hasDiscount = product.price && product.price > 20 && stableRandom > 0.7;
   const discountPercent = hasDiscount ? 30 : 0;
   const originalPrice = hasDiscount
     ? (product.price! / (1 - discountPercent / 100)).toFixed(2)

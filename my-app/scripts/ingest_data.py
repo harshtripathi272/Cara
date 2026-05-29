@@ -16,8 +16,7 @@ Usage:
 import os
 import json
 import time
-import gzip
-from huggingface_hub import hf_hub_download
+import requests
 from supabase import create_client, Client
 
 # -- Config --
@@ -167,117 +166,106 @@ def process_record(record):
     }
 
 
-def read_jsonl_file(filepath, limit):
-    """Read records from a JSONL file (plain or gzipped)."""
-    records = []
-    opener = gzip.open if filepath.endswith(".gz") else open
-
-    with opener(filepath, "rt", encoding="utf-8") as f:
-        for i, line in enumerate(f):
-            if len(records) >= limit * 2:  # Read extra to account for skipped records
-                break
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                record = json.loads(line)
-                records.append(record)
-            except json.JSONDecodeError:
-                continue
-
-    return records
-
-
 def ingest_category(category_name, filepath_in_repo, limit=RECORDS_PER_CATEGORY):
-    """Download and ingest one category from HuggingFace."""
-    print(f"\n{'=' * 60}")
-    print(f"Loading: {category_name}")
-    print("=" * 60)
+    """Stream and ingest one category from HuggingFace."""
+    print(f"\n{'=' * 60}", flush=True)
+    print(f"Streaming: {category_name}", flush=True)
+    print("=" * 60, flush=True)
 
-    # Try multiple file path patterns
-    file_paths_to_try = [
-        filepath_in_repo,
-        filepath_in_repo + ".gz",
-        f"raw/meta_categories/{category_name.replace('raw_meta_', 'meta_')}.jsonl",
-        f"raw/meta_categories/{category_name.replace('raw_meta_', 'meta_')}.jsonl.gz",
-    ]
+    url = f"https://huggingface.co/datasets/{DATASET_REPO}/resolve/main/{filepath_in_repo}"
+    print(f"  URL: {url}", flush=True)
 
-    local_path = None
-    for fpath in file_paths_to_try:
-        try:
-            print(f"  Trying: {fpath}")
-            local_path = hf_hub_download(
-                repo_id=DATASET_REPO,
-                filename=fpath,
-                repo_type="dataset",
-            )
-            print(f"  Downloaded: {fpath}")
-            break
-        except Exception as e:
-            print(f"  Not found: {fpath} ({type(e).__name__})")
-            continue
-
-    if not local_path:
-        print(f"  ERROR: Could not find data file for {category_name}")
-        return 0
-
-    # Read JSONL
-    print("  Reading records...")
-    raw_records = read_jsonl_file(local_path, limit)
-    print(f"  Read {len(raw_records)} raw records")
-
-    batch = []
     inserted = 0
     skipped = 0
+    batch = []
 
-    for record in raw_records:
-        if inserted >= limit:
+    # Retry parameters
+    max_retries = 3
+    retry_delay = 2
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            headers = {
+                "Accept-Encoding": "gzip",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+            }
+            response = requests.get(url, headers=headers, stream=True)
+            if response.status_code != 200:
+                print(f"  ERROR: HTTP {response.status_code} fetching dataset (attempt {attempt}/{max_retries})", flush=True)
+                if attempt < max_retries:
+                    time.sleep(retry_delay * attempt)
+                    continue
+                return 0
+
+            # response.iter_lines() handles line-by-line streaming/decompression
+            for line in response.iter_lines():
+                if not line:
+                    continue
+                if inserted >= limit:
+                    break
+
+                try:
+                    record = json.loads(line.decode('utf-8'))
+                except Exception:
+                    continue
+
+                row = process_record(record)
+                if row is None:
+                    skipped += 1
+                    continue
+
+                batch.append(row)
+
+                if len(batch) >= BATCH_SIZE:
+                    try:
+                        supabase.table("products").insert(batch).execute()
+                        inserted += len(batch)
+                        print(f"  Inserted {inserted}/{limit} (skipped {skipped})", flush=True)
+                    except Exception as e:
+                        print(f"  ERROR inserting batch: {e}", flush=True)
+                        # Fallback to inserting one-by-one to avoid skipping good rows on constraints
+                        for single_row in batch:
+                            try:
+                                supabase.table("products").insert(single_row).execute()
+                                inserted += 1
+                            except Exception:
+                                skipped += 1
+                    batch = []
+                    time.sleep(0.1)
+            
+            # If we successfully read and processed (or hit the limit), break out of retry loop
             break
 
-        row = process_record(record)
-        if row is None:
-            skipped += 1
-            continue
-
-        batch.append(row)
-
-        if len(batch) >= BATCH_SIZE:
-            try:
-                supabase.table("products").insert(batch).execute()
-                inserted += len(batch)
-                print(f"  Inserted {inserted}/{limit} (skipped {skipped})")
-            except Exception as e:
-                print(f"  ERROR inserting batch: {e}")
-                for single_row in batch:
-                    try:
-                        supabase.table("products").insert(single_row).execute()
-                        inserted += 1
-                    except Exception:
-                        skipped += 1
-            batch = []
-            time.sleep(0.1)
+        except Exception as e:
+            print(f"  Connection error on attempt {attempt}/{max_retries}: {e}", flush=True)
+            if attempt < max_retries:
+                time.sleep(retry_delay * attempt)
+            else:
+                print(f"  All {max_retries} attempts failed.", flush=True)
+                import traceback
+                traceback.print_exc()
 
     # Insert remaining
     if batch:
         try:
             supabase.table("products").insert(batch).execute()
             inserted += len(batch)
-            print(f"  Inserted {inserted}/{limit} (skipped {skipped})")
+            print(f"  Inserted {inserted}/{limit} (skipped {skipped})", flush=True)
         except Exception as e:
-            print(f"  ERROR inserting final batch: {e}")
+            print(f"  ERROR inserting final batch: {e}", flush=True)
 
-    print(f"  Done: {inserted} records inserted, {skipped} skipped")
+    print(f"  Done: {inserted} records inserted, {skipped} skipped", flush=True)
     return inserted
 
 
 def main():
-    print("=" * 54)
-    print("  CARA Store -- HuggingFace Data Ingestion")
-    print("=" * 54)
-    print(f"\nSupabase URL: {SUPABASE_URL}")
-    print(f"Categories:   {len(CATEGORIES)}")
-    print(f"Per category: {RECORDS_PER_CATEGORY}")
-    print(f"Total target: ~{len(CATEGORIES) * RECORDS_PER_CATEGORY} records")
+    print("=" * 54, flush=True)
+    print("  CARA Store -- HuggingFace Data Ingestion", flush=True)
+    print("=" * 54, flush=True)
+    print(f"\nSupabase URL: {SUPABASE_URL}", flush=True)
+    print(f"Categories:   {len(CATEGORIES)}", flush=True)
+    print(f"Per category: {RECORDS_PER_CATEGORY}", flush=True)
+    print(f"Total target: ~{len(CATEGORIES) * RECORDS_PER_CATEGORY} records", flush=True)
 
     total_inserted = 0
     start_time = time.time()
@@ -287,11 +275,11 @@ def main():
         total_inserted += count
 
     elapsed = time.time() - start_time
-    print("\n" + "=" * 60)
-    print("COMPLETE")
-    print(f"  Total inserted: {total_inserted}")
-    print(f"  Time elapsed:   {elapsed:.1f}s")
-    print("=" * 60)
+    print("\n" + "=" * 60, flush=True)
+    print("COMPLETE", flush=True)
+    print(f"  Total inserted: {total_inserted}", flush=True)
+    print(f"  Time elapsed:   {elapsed:.1f}s", flush=True)
+    print("=" * 60, flush=True)
 
 
 if __name__ == "__main__":
