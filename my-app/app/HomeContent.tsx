@@ -24,7 +24,14 @@ const categoryColors: Record<string, string> = {
   "Health & Personal Care": "#1b4332",
 };
 
-const categoryImages: Record<string, string> = {};
+const categoryImages: Record<string, string> = {
+  "All Beauty": "/images/beauty.png",
+  "All Electronics": "/images/tech.png",
+  "AMAZON FASHION": "/images/fitness.png",
+  "Amazon Home": "/images/home.png",
+  "Sports & Outdoors": "/images/fitness.png",
+  "Health & Personal Care": "/images/beauty.png",
+};
 
 // Simple string hash function to generate a stable hue value
 const getStableColor = (name: string) => {
@@ -163,24 +170,28 @@ export default function HomeContent({
             subtitle="Gear up for every workout"
             href="/shop?category=Sports and Outdoors"
             bgColor="#1b4332"
+            imageUrl="/images/fitness.png"
           />
           <CategoryCard
             title="Tech & Gadgets"
             subtitle="Latest in electronics"
             href="/shop?category=Electronics"
             bgColor="#16213e"
+            imageUrl="/images/tech.png"
           />
           <CategoryCard
             title="Beauty & Care"
             subtitle="Look & feel your best"
             href="/shop?category=Beauty and Personal Care"
             bgColor="#533483"
+            imageUrl="/images/beauty.png"
           />
           <CategoryCard
             title="Home Essentials"
             subtitle="Upgrade your space"
             href="/shop?category=Home and Kitchen"
             bgColor="#2c3e50"
+            imageUrl="/images/home.png"
           />
         </div>
       </motion.div>
