@@ -1,0 +1,298 @@
+"""
+CARA Store - HuggingFace to Supabase Data Ingestion Script
+==========================================================
+
+Pulls product data from McAuley-Lab/Amazon-Reviews-2023 dataset
+and inserts into Supabase products table.
+
+Uses huggingface_hub to download raw JSONL files directly
+(avoids deprecated loading scripts).
+
+Usage:
+  pip install huggingface_hub supabase
+  python ingest_data.py
+"""
+
+import os
+import json
+import time
+import gzip
+from huggingface_hub import hf_hub_download
+from supabase import create_client, Client
+
+# -- Config --
+SUPABASE_URL = os.environ.get(
+    "SUPABASE_URL",
+    "https://lvifaalxebugbsanpucn.supabase.co",
+)
+SUPABASE_KEY = os.environ.get(
+    "SUPABASE_KEY",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aWZhYWx4ZWJ1Z2JzYW5wdWNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDg3NjIsImV4cCI6MjA5NTYyNDc2Mn0.MMKtpAMv0zQbTn3sapyoof1YCDG_gU4VCAF-3snQUVo",
+)
+
+DATASET_REPO = "McAuley-Lab/Amazon-Reviews-2023"
+
+# Map category name to the JSONL filename in the HF repo
+CATEGORIES = {
+    "raw_meta_Clothing_Shoes_and_Jewelry": "raw/meta_categories/meta_Clothing_Shoes_and_Jewelry.jsonl",
+    "raw_meta_Electronics": "raw/meta_categories/meta_Electronics.jsonl",
+    "raw_meta_Beauty_and_Personal_Care": "raw/meta_categories/meta_Beauty_and_Personal_Care.jsonl",
+    "raw_meta_Home_and_Kitchen": "raw/meta_categories/meta_Home_and_Kitchen.jsonl",
+    "raw_meta_Sports_and_Outdoors": "raw/meta_categories/meta_Sports_and_Outdoors.jsonl",
+    "raw_meta_Health_and_Personal_Care": "raw/meta_categories/meta_Health_and_Personal_Care.jsonl",
+}
+
+RECORDS_PER_CATEGORY = 1000
+BATCH_SIZE = 50
+CLIENT_ID = "demo_client"
+CURRENCY = "USD"
+
+# -- Supabase Client --
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+
+def extract_image_url(images):
+    """Extract the best available image URL from the images field."""
+    if not images:
+        return None
+    try:
+        if isinstance(images, list):
+            for img in images:
+                if isinstance(img, dict):
+                    for key in ["hi_res", "large", "thumb"]:
+                        url = img.get(key)
+                        if url and isinstance(url, str) and url.startswith("http"):
+                            return url
+                elif isinstance(img, str) and img.startswith("http"):
+                    return img
+        elif isinstance(images, dict):
+            for key in ["hi_res", "large", "thumb"]:
+                urls = images.get(key, [])
+                if isinstance(urls, list):
+                    for url in urls:
+                        if url and isinstance(url, str) and url.startswith("http"):
+                            return url
+                elif isinstance(urls, str) and urls.startswith("http"):
+                    return urls
+    except Exception as e:
+        print(f"  Warning: Failed to parse image: {e}")
+    return None
+
+
+def parse_price(price_val):
+    """Parse price from various formats."""
+    if price_val is None:
+        return None
+    if isinstance(price_val, (int, float)):
+        return float(price_val) if price_val > 0 else None
+    if isinstance(price_val, str):
+        cleaned = price_val.strip().replace("$", "").replace(",", "").strip()
+        if not cleaned:
+            return None
+        if " - " in cleaned or " to " in cleaned.lower():
+            cleaned = cleaned.split(" - ")[0].split(" to ")[0].strip()
+        try:
+            val = float(cleaned)
+            return val if val > 0 else None
+        except ValueError:
+            return None
+    return None
+
+
+def process_record(record):
+    """Transform a HuggingFace record into a Supabase row."""
+    title = record.get("title", "")
+    if not title or not isinstance(title, str) or len(title.strip()) < 3:
+        return None
+
+    # Description - join list if needed
+    desc = record.get("description", "")
+    if isinstance(desc, list):
+        desc = " ".join([str(d) for d in desc if d])
+    elif not isinstance(desc, str):
+        desc = str(desc) if desc else ""
+
+    # Features
+    features = record.get("features", [])
+    if isinstance(features, list):
+        features = [str(f) for f in features if f and isinstance(f, str)]
+    else:
+        features = []
+
+    # Price
+    price = parse_price(record.get("price"))
+
+    # Rating
+    avg_rating = record.get("average_rating")
+    if isinstance(avg_rating, (int, float)) and avg_rating > 0:
+        avg_rating = float(avg_rating)
+    else:
+        avg_rating = None
+
+    # Rating count
+    rating_count = record.get("rating_number")
+    if isinstance(rating_count, (int, float)) and rating_count > 0:
+        rating_count = int(rating_count)
+    else:
+        rating_count = None
+
+    # Image URL
+    image_url = extract_image_url(record.get("images"))
+
+    # Main category
+    main_category = record.get("main_category", "")
+    if not isinstance(main_category, str):
+        main_category = ""
+
+    # Build raw_details jsonb
+    try:
+        raw_json = json.dumps(record, default=str)
+        raw_details = json.loads(raw_json)
+    except Exception:
+        raw_details = {"title": title}
+
+    return {
+        "client_id": CLIENT_ID,
+        "title": title.strip()[:500],
+        "description": desc.strip()[:5000] if desc else None,
+        "main_category": main_category.strip() if main_category else None,
+        "features": features[:20] if features else None,
+        "price": price,
+        "currency": CURRENCY,
+        "average_rating": avg_rating,
+        "rating_count": rating_count,
+        "image_url": image_url,
+        "in_stock": True,
+        "raw_details": raw_details,
+    }
+
+
+def read_jsonl_file(filepath, limit):
+    """Read records from a JSONL file (plain or gzipped)."""
+    records = []
+    opener = gzip.open if filepath.endswith(".gz") else open
+
+    with opener(filepath, "rt", encoding="utf-8") as f:
+        for i, line in enumerate(f):
+            if len(records) >= limit * 2:  # Read extra to account for skipped records
+                break
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                record = json.loads(line)
+                records.append(record)
+            except json.JSONDecodeError:
+                continue
+
+    return records
+
+
+def ingest_category(category_name, filepath_in_repo, limit=RECORDS_PER_CATEGORY):
+    """Download and ingest one category from HuggingFace."""
+    print(f"\n{'=' * 60}")
+    print(f"Loading: {category_name}")
+    print("=" * 60)
+
+    # Try multiple file path patterns
+    file_paths_to_try = [
+        filepath_in_repo,
+        filepath_in_repo + ".gz",
+        f"raw/meta_categories/{category_name.replace('raw_meta_', 'meta_')}.jsonl",
+        f"raw/meta_categories/{category_name.replace('raw_meta_', 'meta_')}.jsonl.gz",
+    ]
+
+    local_path = None
+    for fpath in file_paths_to_try:
+        try:
+            print(f"  Trying: {fpath}")
+            local_path = hf_hub_download(
+                repo_id=DATASET_REPO,
+                filename=fpath,
+                repo_type="dataset",
+            )
+            print(f"  Downloaded: {fpath}")
+            break
+        except Exception as e:
+            print(f"  Not found: {fpath} ({type(e).__name__})")
+            continue
+
+    if not local_path:
+        print(f"  ERROR: Could not find data file for {category_name}")
+        return 0
+
+    # Read JSONL
+    print("  Reading records...")
+    raw_records = read_jsonl_file(local_path, limit)
+    print(f"  Read {len(raw_records)} raw records")
+
+    batch = []
+    inserted = 0
+    skipped = 0
+
+    for record in raw_records:
+        if inserted >= limit:
+            break
+
+        row = process_record(record)
+        if row is None:
+            skipped += 1
+            continue
+
+        batch.append(row)
+
+        if len(batch) >= BATCH_SIZE:
+            try:
+                supabase.table("products").insert(batch).execute()
+                inserted += len(batch)
+                print(f"  Inserted {inserted}/{limit} (skipped {skipped})")
+            except Exception as e:
+                print(f"  ERROR inserting batch: {e}")
+                for single_row in batch:
+                    try:
+                        supabase.table("products").insert(single_row).execute()
+                        inserted += 1
+                    except Exception:
+                        skipped += 1
+            batch = []
+            time.sleep(0.1)
+
+    # Insert remaining
+    if batch:
+        try:
+            supabase.table("products").insert(batch).execute()
+            inserted += len(batch)
+            print(f"  Inserted {inserted}/{limit} (skipped {skipped})")
+        except Exception as e:
+            print(f"  ERROR inserting final batch: {e}")
+
+    print(f"  Done: {inserted} records inserted, {skipped} skipped")
+    return inserted
+
+
+def main():
+    print("=" * 54)
+    print("  CARA Store -- HuggingFace Data Ingestion")
+    print("=" * 54)
+    print(f"\nSupabase URL: {SUPABASE_URL}")
+    print(f"Categories:   {len(CATEGORIES)}")
+    print(f"Per category: {RECORDS_PER_CATEGORY}")
+    print(f"Total target: ~{len(CATEGORIES) * RECORDS_PER_CATEGORY} records")
+
+    total_inserted = 0
+    start_time = time.time()
+
+    for category_name, filepath in CATEGORIES.items():
+        count = ingest_category(category_name, filepath)
+        total_inserted += count
+
+    elapsed = time.time() - start_time
+    print("\n" + "=" * 60)
+    print("COMPLETE")
+    print(f"  Total inserted: {total_inserted}")
+    print(f"  Time elapsed:   {elapsed:.1f}s")
+    print("=" * 60)
+
+
+if __name__ == "__main__":
+    main()
