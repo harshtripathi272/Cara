@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-import hashlib
 import requests
 from qdrant_client import QdrantClient
 from qdrant_client import models
@@ -24,7 +23,8 @@ QDRANT_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIiwic3Via
 COLLECTION_NAME = "cara"
 NVIDIA_API_KEY = "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"
 
-client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
+# Initialize Qdrant client with cloud_inference=True
+client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY, cloud_inference=True)
 
 def get_dense_embedding(query_text):
     url = "https://integrate.api.nvidia.com/v1/embeddings"
@@ -44,30 +44,11 @@ def get_dense_embedding(query_text):
     else:
         raise RuntimeError(f"Embedding failed: {r.status_code} - {r.text}")
 
-def get_sparse_vector(query_text):
-    # Split query into words/tokens
-    tokens = [t.lower().strip() for t in query_text.split() if t.strip()]
-    
-    # Map to token IDs
-    token_map = {}
-    for token in tokens:
-        token_id = int(hashlib.md5(token.encode('utf-8')).hexdigest()[:8], 16) % 2147483647
-        token_map[token_id] = 1.0
-        
-    sorted_indices = sorted(token_map.keys())
-    sorted_values = [token_map[idx] for idx in sorted_indices]
-    
-    return {
-        "indices": sorted_indices,
-        "values": sorted_values
-    }
-
 def search(query_text, limit=5, category_filter=None):
     print(f"\nSearching for: '{query_text}'...")
     
-    # 1. Generate dense & sparse query vectors
+    # 1. Generate dense query vector via NVIDIA NIM API
     dense_vec = get_dense_embedding(query_text)
-    sparse_vec = get_sparse_vector(query_text)
     
     # 2. Build filter if provided
     query_filter = None
@@ -81,7 +62,7 @@ def search(query_text, limit=5, category_filter=None):
             ]
         )
         
-    # 3. Perform Hybrid Search
+    # 3. Perform Hybrid Search (NVIDIA dense + Qdrant server-side BM25 sparse)
     results = client.query_points(
         collection_name=COLLECTION_NAME,
         prefetch=[
@@ -91,9 +72,9 @@ def search(query_text, limit=5, category_filter=None):
                 limit=50
             ),
             models.Prefetch(
-                query=models.SparseVector(
-                    indices=sparse_vec["indices"],
-                    values=sparse_vec["values"]
+                query=models.Document(
+                    text=query_text,
+                    model="bm25"
                 ),
                 using="sparse-vector",
                 limit=50
@@ -123,3 +104,5 @@ if __name__ == "__main__":
         search(query)
     except Exception as e:
         print(f"Search failed: {e}")
+        import traceback
+        traceback.print_exc()
